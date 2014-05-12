@@ -1,0 +1,245 @@
+package mylock.app;
+
+
+import android.app.Notification;
+import android.app.NotificationManager;
+import android.app.PendingIntent;
+import android.app.Service;
+import android.content.Intent;
+import android.content.IntentFilter;
+import android.graphics.Bitmap;
+import android.graphics.PixelFormat;
+import android.os.IBinder;
+import android.view.Gravity;
+import android.view.LayoutInflater;
+import android.view.MotionEvent;
+import android.view.View;
+import android.view.WindowManager;
+import android.view.View.OnTouchListener;
+import android.widget.ImageView;
+import android.widget.Toast;
+
+public class LockService extends Service
+{
+
+	@Override
+	public IBinder onBind(Intent arg0)
+	{
+		// TODO Auto-generated method stub
+		IntentFilter fil=new IntentFilter();
+		fil.addAction(Intent.ACTION_SCREEN_ON);
+		registerReceiver(new LockReceiver(),fil);
+		
+		return null;
+	}
+
+	/*protected boolean foreground = false;
+	protected boolean cancelNotification = false;
+	private Notification notification;
+	private View myView;
+	private View myView1;
+	protected int id = 0;
+	private WindowManager wm;
+	private WindowManager.LayoutParams params;
+	private WindowManager.LayoutParams params1;
+	private ImageView imageView1;
+
+	public static LockService INSTANCE;
+
+	@Override
+	public IBinder onBind(Intent intent)
+	{
+		return null;
+	}
+
+	@Override
+	public void onCreate()
+	{
+		super.onCreate();
+		INSTANCE = this;
+		//db = new DBManager(this);
+		// System.exit(0);
+		Toast.makeText(getBaseContext(), "onCreate", Toast.LENGTH_SHORT).show();
+		params = new WindowManager.LayoutParams(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.TYPE_SYSTEM_ALERT, WindowManager.LayoutParams.FLAG_FULLSCREEN |
+		// WindowManager.LayoutParams.TYPE_SYSTEM_ALERT |
+				WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE |
+				// WindowManager.LayoutParams.FLAG_NOT_TOUCH_MODAL |
+				WindowManager.LayoutParams.FLAG_LAYOUT_IN_SCREEN | WindowManager.LayoutParams.FLAG_WATCH_OUTSIDE_TOUCH, PixelFormat.OPAQUE);
+
+		params.gravity = Gravity.TOP | Gravity.LEFT;
+		wm = (WindowManager) getSystemService(WINDOW_SERVICE);
+
+//		inflateview();
+		foregroundNotification(1);
+		// moveToForeground(1,n,true);
+		System.out.println("SERVICE ONCREATE");
+		// new TestTask().execute();
+
+		params1 = new WindowManager.LayoutParams(WindowManager.LayoutParams.FLAG_FULLSCREEN,
+				WindowManager.LayoutParams.FLAG_FULLSCREEN,
+				WindowManager.LayoutParams.TYPE_SYSTEM_OVERLAY,
+				WindowManager.LayoutParams.FLAG_FULLSCREEN |
+		// WindowManager.LayoutParams.TYPE_SYSTEM_ALERT |
+		// WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE |
+		// WindowManager.LayoutParams.FLAG_NOT_TOUCH_MODAL |
+				WindowManager.LayoutParams.FLAG_LAYOUT_IN_SCREEN | WindowManager.LayoutParams.FLAG_WATCH_OUTSIDE_TOUCH, PixelFormat.OPAQUE);
+
+		params1.gravity = Gravity.TOP | Gravity.LEFT;
+		wm = (WindowManager) getSystemService(WINDOW_SERVICE);
+
+		inflateview();
+		enableLock();
+		foregroundNotification(1);
+		// moveToForeground(1,n,true);
+		System.out.println("SERVICE ONCREATE");
+		// new TestTask().execute();*/
+/*
+	}
+/*
+	@Override
+	public void onDestroy()
+	{
+		super.onDestroy();
+		((NotificationManager) getSystemService(NOTIFICATION_SERVICE)).cancel(0);
+		Toast.makeText(getBaseContext(), "onDestroy", Toast.LENGTH_SHORT).show();
+		if (myView != null)
+		{
+			((WindowManager) getSystemService(WINDOW_SERVICE)).removeView(myView);
+			myView = null;
+		}
+	}
+
+	protected Notification foregroundNotification(int notificationId)
+	{
+		notification = new Notification(R.drawable.ic_launcher, "my Notification", System.currentTimeMillis());
+		notification.flags = notification.flags | Notification.FLAG_ONGOING_EVENT | Notification.FLAG_ONLY_ALERT_ONCE;
+		notification.setLatestEventInfo(this, "my Notification", "my Notification", notificationIntent());
+		((NotificationManager) getSystemService(NOTIFICATION_SERVICE)).notify(id, notification);
+		return notification;
+		// return null;
+	}
+
+	private PendingIntent notificationIntent()
+	{
+		// Intent intent = new Intent(this, stopservice.class);
+		// PendingIntent pending = PendingIntent.getActivity(this, 0, intent,
+		// PendingIntent.FLAG_UPDATE_CURRENT);
+		// return pending;
+		return null;
+	}
+
+	public void inflateview()
+	{
+		LayoutInflater inflater = (LayoutInflater) getSystemService(LAYOUT_INFLATER_SERVICE);
+		myView = inflater.inflate(R.layout.lockview, null);
+		imageView1 = (ImageView) myView.findViewById(R.id.imageView1);
+
+		imageView1.setOnTouchListener(new OnTouchListener()
+		{
+			public boolean onTouch(View v, MotionEvent event)
+			{
+				Toast.makeText(getBaseContext(), "onToasttt", Toast.LENGTH_SHORT).show();
+				System.out.println("ONTOUCH:" + event.getX() + ":" + event.getY());
+			/*	currentLockContext.setXY((int) event.getX(), (int) event.getY());
+				if (currentLockContext.getConfidence() >= 100)
+				{
+					disableLock();
+				} else
+				{
+					setRandomImage();
+				}*//*
+				return true;
+			}
+		});
+
+		myView.setOnTouchListener(new OnTouchListener()
+		{
+			public boolean onTouch(View v, MotionEvent event)
+			{
+				Toast.makeText(getBaseContext(), "onToasttt", Toast.LENGTH_SHORT).show();
+				System.out.println("ONTOUCH:" + event.getX() + ":" + event.getY());
+				/*currentLockContext.setXY((int) event.getX(), (int) event.getY());
+				if (currentLockContext.getConfidence() >= 1)
+				{
+					disableLock();
+				} else
+				{
+					setRandomImage();
+				}*//*
+				return true;
+			}
+		});
+		// Add layout to window manager
+		
+		wm.addView(myView, params);
+	}
+
+	public void inflateview1()
+	{
+		LayoutInflater inflater = (LayoutInflater) getSystemService(LAYOUT_INFLATER_SERVICE);
+		myView1 = inflater.inflate(R.layout.lockview, null);
+		imageView1 = (ImageView) myView1.findViewById(R.id.imageView1);
+
+		imageView1.setOnTouchListener(new OnTouchListener()
+		{
+			public boolean onTouch(View v, MotionEvent event)
+			{
+				Toast.makeText(getBaseContext(), "onToasttt", Toast.LENGTH_SHORT).show();
+				System.out.println("ONTOUCH:" + event.getX() + ":" + event.getY());
+				/*currentLockContext.setXY((int) event.getX(), (int) event.getY());
+				if (currentLockContext.getConfidence() >= 100)
+				{
+					disableLock();
+				} else
+				{
+					setRandomImage();
+				}*//*
+				return true;
+			}
+		});
+
+		myView1.setOnTouchListener(new OnTouchListener()
+		{
+			public boolean onTouch(View v, MotionEvent event)
+			{
+				Toast.makeText(getBaseContext(), "onToasttt", Toast.LENGTH_SHORT).show();
+				System.out.println("ONTOUCH:" + event.getX() + ":" + event.getY());
+				/*currentLockContext.setXY((int) event.getX(), (int) event.getY());
+				if (currentLockContext.getConfidence() >= 100)
+				{
+					disableLock();
+				} else
+				{
+					setRandomImage();
+				}*//*
+				return true;
+			}
+		});
+		// Add layout to window manager
+		wm.addView(myView1, params1);
+	}
+
+	public void enableLock()
+	{
+//		wm.addView(myView, params);
+		myView.setVisibility(View.VISIBLE);
+		//currentLockContext = db.new LockContext();
+		setRandomImage();
+	}
+
+	public void disableLock()
+	{
+		System.out.println("DISABLING LOCK");
+//		wm.removeView(myView);
+		myView.setVisibility(View.GONE);
+		// myView1.setVisibility(View.GONE);
+	}
+
+	public void setRandomImage()
+	{
+		//Bitmap bmp = currentLockContext.getNextRandomImage();
+		//imageView1.setImageBitmap(bmp);
+	}
+*/
+
+}
